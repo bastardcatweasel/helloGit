@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphics", "graphics\graphi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bengine", "Bengine\Bengine.vcxproj", "{44D37693-34F1-4A6E-8E69-E3FB0EA5BB8C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZombieGame1", "ZombieGame1\ZombieGame1.vcxproj", "{9D639C91-355F-4B06-A4C3-117A82A1740A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44D37693-34F1-4A6E-8E69-E3FB0EA5BB8C} = {44D37693-34F1-4A6E-8E69-E3FB0EA5BB8C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -24,6 +29,10 @@ Global
 		{44D37693-34F1-4A6E-8E69-E3FB0EA5BB8C}.Debug|Win32.Build.0 = Debug|Win32
 		{44D37693-34F1-4A6E-8E69-E3FB0EA5BB8C}.Release|Win32.ActiveCfg = Release|Win32
 		{44D37693-34F1-4A6E-8E69-E3FB0EA5BB8C}.Release|Win32.Build.0 = Release|Win32
+		{9D639C91-355F-4B06-A4C3-117A82A1740A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D639C91-355F-4B06-A4C3-117A82A1740A}.Debug|Win32.Build.0 = Debug|Win32
+		{9D639C91-355F-4B06-A4C3-117A82A1740A}.Release|Win32.ActiveCfg = Release|Win32
+		{9D639C91-355F-4B06-A4C3-117A82A1740A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
