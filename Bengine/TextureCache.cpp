@@ -21,10 +21,10 @@ namespace Bengine{
 
 
 			_textureMap.insert(make_pair(texturePath, newTexture));
-			std::cout << "Loaded Cached Texture" << std::endl;
+			
 			return newTexture;
 		}
-		std::cout << "loaded Texture" << std::endl;
+	
 		return mit->second;
 
 	}
