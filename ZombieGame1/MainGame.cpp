@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-MainGame::MainGame() : _screenWidth(500), _screenHeight(500), _gameState(GameState::PLAY), _fps(0)
+MainGame::MainGame() : _screenWidth(500), _screenHeight(500), _gameState(GameState::PLAY), _fps(0), _player(nullptr)
 {
     // Empty
 }
@@ -30,11 +30,11 @@ void MainGame::initSystems() {
 	_window.create("Awesome Screen", _screenWidth, _screenHeight, 0);
 	glClearColor(0.6, 0.6, 0.6, 1);
 	initShaders();
-
+	_agentSpriteBatch.init();
 	_camera.init(_screenWidth, _screenHeight);
-	_levels.push_back(new Level("levels/level1.txt"));
-	_currentLevel = 0;
 
+	initLevel();
+	
 
 
 }
@@ -57,6 +57,7 @@ void MainGame::gameLoop() {
 	{
 		fpsLimiter.begin();
 		processInput();
+		_player->update();
 		_camera.update();
 		drawGame();
 		
@@ -102,16 +103,41 @@ void MainGame::drawGame() {
 
 	glActiveTexture(GL_TEXTURE0);
 	GLint textureUniform = _textureProgram.getUniformLocation("mySampler");
+	glUniform1i(textureUniform, 0);
+
+
 	glm::mat4 projectionMatrix = _camera.getCameraMatrix();
 
 	GLint pUniform = _textureProgram.getUniformLocation("P");
 
 	glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectionMatrix[0][0]);
-
+	//draw level
 	_levels[_currentLevel]->draw();
+	_agentSpriteBatch.begin();
 
+	//draw player
+	for (int i = 0; i < _humans.size(); i++)
+	{
+		_humans[i]->draw(_agentSpriteBatch);
+	}
 
+	_agentSpriteBatch.end();
+	_agentSpriteBatch.renderBatch();
 	_textureProgram.unuse();
     // Swap our buffer and draw everything to the screen!
     _window.swapBuffer();
+}
+void MainGame::initLevel()
+{
+	_levels.push_back(new Level("levels/level1.txt"));
+	_currentLevel = 0;
+
+	_player = new Player();
+	_player->init(1.0f, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
+
+	_humans.push_back(_player);
+	for (int i = 0; i < _humans.size(); i++)
+	{
+
+	}
 }

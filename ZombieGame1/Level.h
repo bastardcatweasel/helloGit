@@ -4,7 +4,7 @@
 #include <Bengine\SpriteBatch.h>
 #include <Bengine\ResourceManager.h>
 
-const int TILE_WIDTH = 8;
+const int TILE_WIDTH = 32;
 
 class Level
 {
@@ -14,6 +14,8 @@ public:
 
 	void draw();
 
+	glm::vec2 getStartPlayerPos() const { return _startPlayerPosition; }
+	const std::vector<glm::vec2>& getStartZombiePos() const { return _zombieStartPosition; }
 private:
 
 	std::vector<std::string> _levelData;
@@ -21,7 +23,7 @@ private:
 	Bengine::SpriteBatch _spriteBatch;
 
 
-	glm::ivec2 _startPlayerPosition;
-	std::vector<glm::ivec2> _zombieStartPosition;
+	glm::vec2 _startPlayerPosition;
+	std::vector<glm::vec2> _zombieStartPosition;
 };
 

@@ -5,6 +5,9 @@
 #include <Bengine/Camera2D.h>
 #include <Bengine/InputManager.h>
 #include "Level.h"
+#include "Player.h"
+#include <vector>
+#include <Bengine\SpriteBatch.h>
 
 enum class GameState{PLAY,EXIT};
 class MainGame
@@ -19,6 +22,8 @@ public:
 private:
     /// Initializes the core systems
     void initSystems();
+
+	void initLevel();
 
     /// Initializes the shaders
     void initShaders();
@@ -49,5 +54,11 @@ private:
 	GameState _gameState;
 	int _fps;
 	int _currentLevel;
+
+	Player* _player;
+
+	std::vector<Human*> _humans;
+
+	Bengine::SpriteBatch _agentSpriteBatch;
 };
 
