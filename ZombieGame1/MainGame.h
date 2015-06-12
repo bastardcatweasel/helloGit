@@ -31,6 +31,8 @@ private:
     /// Main game loop for the program
     void gameLoop();
 
+	void updateAgents();
+
     /// Handles input processing
     void processInput();
 

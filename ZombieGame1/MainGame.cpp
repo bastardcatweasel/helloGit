@@ -57,7 +57,9 @@ void MainGame::gameLoop() {
 	{
 		fpsLimiter.begin();
 		processInput();
-		_player->update();
+
+		updateAgents();
+		_camera.setPosition(_player->getPosition());
 		_camera.update();
 		drawGame();
 		
@@ -66,6 +68,15 @@ void MainGame::gameLoop() {
 	}
 }
 
+void MainGame::updateAgents()
+{
+	for (int i = 0; i < _humans.size(); i++)
+	{
+		_humans[i]->update();
+	}
+
+
+}
 void MainGame::processInput() {
     SDL_Event evnt;
     //Will keep looping until there are no more events to process
@@ -133,7 +144,7 @@ void MainGame::initLevel()
 	_currentLevel = 0;
 
 	_player = new Player();
-	_player->init(1.0f, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
+	_player->init(4.0f, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
 
 	_humans.push_back(_player);
 	for (int i = 0; i < _humans.size(); i++)
