@@ -20,8 +20,8 @@ void Player::init(float speed, glm::vec2 position, Bengine::InputManager* inputM
 	_color.a = 255;
 }
 void Player::update(const std::vector<std::string> &levelData,
-	std::_Vector_iterator<Human*> & humans,
-	std::_Vector_iterator<Zombie*>& zombies)
+	std::vector<Human*>&  humans,
+	std::vector<Zombie*>& zombies)
 {
 	if (_inputManager->isKeyPressed(SDLK_w))
 	{
@@ -50,5 +50,6 @@ void Player::update(const std::vector<std::string> &levelData,
 		
 		
 	}
+	collideWithLevel(levelData);
 	
 }

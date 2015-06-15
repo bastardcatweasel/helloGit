@@ -9,6 +9,9 @@
 #include <vector>
 #include <Bengine\SpriteBatch.h>
 
+
+class Zombie;
+
 enum class GameState{PLAY,EXIT};
 class MainGame
 {
@@ -18,7 +21,7 @@ public:
 
     /// Runs the game
     void run();
-
+	
 private:
     /// Initializes the core systems
     void initSystems();
@@ -60,7 +63,7 @@ private:
 	Player* _player;
 
 	std::vector<Human*> _humans;
-
+	std::vector<Zombie *> _zombies;
 	Bengine::SpriteBatch _agentSpriteBatch;
 };
 

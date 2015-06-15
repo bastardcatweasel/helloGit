@@ -9,9 +9,9 @@ public:
 	Player();
 	~Player();
 	void init(float speed, glm::vec2 position, Bengine::InputManager* inputManager);
-	void update(const std::vector<std::string> &levelData,
-		std::_Vector_iterator<Human*> & humans,
-		std::_Vector_iterator<Zombie*>& zombies);
+	void update(const std::vector<std::string>& levelData,
+		std::vector<Human*> &humans,
+		std::vector<Zombie*> & zombies);
 private:
 	Bengine::InputManager* _inputManager;
 };

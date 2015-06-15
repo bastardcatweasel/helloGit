@@ -4,6 +4,10 @@
 #include <Bengine\Timing.h>
 #include <SDL/SDL.h>
 #include <iostream>
+#include "Zombie.h"
+#include <random>
+#include <ctime>
+
 
 
 MainGame::MainGame() : _screenWidth(500), _screenHeight(500), _gameState(GameState::PLAY), _fps(0), _player(nullptr)
@@ -72,7 +76,14 @@ void MainGame::updateAgents()
 {
 	for (int i = 0; i < _humans.size(); i++)
 	{
-		_humans[i]->update();
+		_humans[i]->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies);
+	}
+	for (int i = 0; i < _humans.size(); i++)
+	{
+		for (int j = i + 1; i < _humans.size(); j++)
+		{
+			_humans[i]->collideWithAgent(_humans[j]);
+		}
 	}
 
 
@@ -146,9 +157,25 @@ void MainGame::initLevel()
 	_player = new Player();
 	_player->init(4.0f, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
 
+
+	std::mt19937 randomEngine(time(nullptr));
+	
+	 std::uniform_int_distribution<int> randX(1, _levels[_currentLevel]->getWidth() - 2);
+	 std::uniform_int_distribution<int> randY(1, _levels[_currentLevel]->getHeight() -2 );
+
+	const float HUMAN_SPEED = 1.0f;
+	
+	std::cout << _levels[_currentLevel]->getNumHumans();
 	_humans.push_back(_player);
-	for (int i = 0; i < _humans.size(); i++)
+
+
+
+	for (int i = 0; i < _levels[_currentLevel]->getNumHumans(); i++)
 	{
+		_humans.push_back(new Human);
+		glm::vec2 pos(randX(randomEngine) * TILE_WIDTH, randY(randomEngine) * TILE_WIDTH);
+		_humans.back()->init(HUMAN_SPEED,pos);
 
 	}
+	
 }

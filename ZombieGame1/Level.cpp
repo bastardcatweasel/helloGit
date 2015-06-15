@@ -20,6 +20,8 @@ Level::Level(const std::string& fileName)
 
 	file >> tmp >> _numHumans;
 
+	std::getline(file, tmp);
+
 	while (std::getline(file, tmp))
 	{
 		_levelData.push_back(tmp);
@@ -61,11 +63,13 @@ Level::Level(const std::string& fileName)
 				break;
 
 			case '@':
+				    _levelData[y][x] = '.';
 					_startPlayerPosition.x = x * TILE_WIDTH;
 					_startPlayerPosition.y = y * TILE_WIDTH;
 					break;
 
 			case 'Z':
+				_levelData[y][x] = '.';
 				_zombieStartPosition.emplace_back(x * TILE_WIDTH, y * TILE_WIDTH);
 					break;
 
