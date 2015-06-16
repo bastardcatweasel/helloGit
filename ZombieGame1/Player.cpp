@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <SDL\SDL.h>
 #include <math.h>
-Player::Player()
+Player::Player() : _currentGunIndex(-1)
 {
 }
 
@@ -38,18 +38,27 @@ void Player::update(const std::vector<std::string> &levelData,
 	else if (_inputManager->isKeyPressed(SDLK_d)){
 		_position.x += _speed;
 	}
-	if (_inputManager->isKeyPressed(SDL_BUTTON_LEFT))
+	if (_inputManager->isKeyPressed(SDLK_1) && _guns.size() >= 0)
 	{
 		
-		int gridwidth = 32;
-		int gridHeight = 32;
-		glm::vec2 mouseCoords = _inputManager->getMouseCoords();
-		_position.x = floor(mouseCoords.x / gridwidth) * gridwidth;
-		_position.y = floor(mouseCoords.y / gridHeight) * gridHeight;
-			
-		
-		
+		_currentGunIndex = 0;
+				
 	}
+	else if (_inputManager->isKeyPressed(SDLK_2) && _guns.size() >= 0)
+	{
+
+		_currentGunIndex = 1;
+
+	}
+
+
 	collideWithLevel(levelData);
 	
+}
+
+void Player::addGun(Gun * gun)
+{
+	_guns.push_back(gun);
+
+	if (_currentGunIndex == -1) _currentGunIndex = 0;
 }

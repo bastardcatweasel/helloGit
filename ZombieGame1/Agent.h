@@ -32,5 +32,8 @@ protected:
 		float x, float y);
 
 	void collideWithTile(glm::vec2 tilePos);
+
+
+	
 };
 

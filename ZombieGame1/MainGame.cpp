@@ -2,13 +2,15 @@
 
 #include <Bengine/Bengine.h>
 #include <Bengine\Timing.h>
+#include <Bengine\Errors.h>
 #include <SDL/SDL.h>
 #include <iostream>
 #include "Zombie.h"
 #include <random>
 #include <ctime>
 
-
+const float HUMAN_SPEED = 1.0f;
+const float ZOMBIE_SPEED = 1.30f;
 
 MainGame::MainGame() : _screenWidth(500), _screenHeight(500), _gameState(GameState::PLAY), _fps(0), _player(nullptr)
 {
@@ -78,14 +80,57 @@ void MainGame::updateAgents()
 	{
 		_humans[i]->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies);
 	}
+
+
+	for (int i = 0; i < _zombies.size(); i++)
+	{
+		_zombies[i]->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies);
+	}
+
+	//Update Z collision
+	for (int i = 0; i < _zombies.size(); i++)
+	{
+		for (int j = i + 1; j < _zombies.size(); j++)
+		{
+			_zombies[i]->collideWithAgent(_zombies[j]);
+		}
+	}
+
+	//coolide with h
+	for (int i = 0; i < _zombies.size(); i++)
+	{
+		for (int j = 1; j < _humans.size(); j++)
+		{
+
+			if (_zombies[i]->collideWithAgent(_humans[j]))
+			{
+				//add zom
+				_zombies.push_back(new Zombie);
+				_zombies.back()->init(ZOMBIE_SPEED,_humans[j]->getPosition());
+
+				delete _humans[j];
+				_humans[j] = _humans.back();
+				_humans.pop_back();
+			}
+		}
+
+
+		if (_zombies[i]->collideWithAgent(_player))
+		{
+			Bengine::fatalError("YOU LOSE");
+		}
+	}
+
+	//update Human Collision
 	for (int i = 0; i < _humans.size(); i++)
 	{
-		for (int j = i + 1; i < _humans.size(); j++)
+		for (int j = i + 1; j < _humans.size(); j++)
 		{
 			_humans[i]->collideWithAgent(_humans[j]);
 		}
 	}
 
+	
 
 }
 void MainGame::processInput() {
@@ -143,6 +188,11 @@ void MainGame::drawGame() {
 		_humans[i]->draw(_agentSpriteBatch);
 	}
 
+	for (int i = 0; i < _zombies.size(); i++)
+	{
+		_zombies[i]->draw(_agentSpriteBatch);
+	}
+
 	_agentSpriteBatch.end();
 	_agentSpriteBatch.renderBatch();
 	_textureProgram.unuse();
@@ -163,7 +213,6 @@ void MainGame::initLevel()
 	 std::uniform_int_distribution<int> randX(1, _levels[_currentLevel]->getWidth() - 2);
 	 std::uniform_int_distribution<int> randY(1, _levels[_currentLevel]->getHeight() -2 );
 
-	const float HUMAN_SPEED = 1.0f;
 	
 	std::cout << _levels[_currentLevel]->getNumHumans();
 	_humans.push_back(_player);
@@ -178,4 +227,14 @@ void MainGame::initLevel()
 
 	}
 	
+
+	const std::vector<glm::vec2>& zombiePositions = _levels[_currentLevel]->getStartZombiePos();
+	for (int i = 0; i < zombiePositions.size(); i++)
+	{
+		_zombies.push_back(new Zombie);
+		
+		_zombies.back()->init(ZOMBIE_SPEED, zombiePositions[i]);
+	}
+
+
 }

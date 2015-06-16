@@ -2,6 +2,9 @@
 #include <Bengine\ResourceManager.h>
 #include "Level.h"
 #include <algorithm>
+
+
+
 Agent::Agent()
 {
 }
@@ -110,7 +113,7 @@ void Agent::collideWithTile(glm::vec2 tilePos)
 bool Agent::collideWithAgent(Agent* agent)
 {
 
-	const float MIN_DISTANCE = (AGENT_RADIUS) * 2.0f;
+	const float MIN_DISTANCE = AGENT_RADIUS * 2.0f;
 	glm::vec2 centerPosA = _position + glm::vec2(AGENT_RADIUS);
 	glm::vec2 centerPosB = agent->getPosition() + glm::vec2(AGENT_RADIUS);
 
@@ -118,12 +121,14 @@ bool Agent::collideWithAgent(Agent* agent)
 
 	float distance = glm::length(distVect);
 	float collisionDepth = MIN_DISTANCE - distance;
-	if (collisionDepth < 0)
+	if (collisionDepth > 0)
 	{
-		_position -= distVect / 2.0f;
-		agent->_position += distVect;
+		glm::vec2 collisionDepthVec = glm::normalize(distVect) * collisionDepth;
+		_position += collisionDepthVec / 2.0f;
+		agent->_position -= collisionDepthVec /2.0f;
 		return true;
 	}
+	return false;
 
 
 
