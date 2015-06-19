@@ -35,7 +35,7 @@ void Zombie::init(float speed, glm::vec2 pos)
 	_color.g = 160;
 	_color.b = 0;
 	_color.a = 255;
-
+	_health = 150;
 }
 Human*  Zombie::getNearestHuman(std::vector<Human*> humans)
 {

@@ -8,7 +8,7 @@
 #include "Player.h"
 #include <vector>
 #include <Bengine\SpriteBatch.h>
-
+#include "Bullet.h"
 
 class Zombie;
 
@@ -35,7 +35,7 @@ private:
     void gameLoop();
 
 	void updateAgents();
-
+	void updateBullets();
     /// Handles input processing
     void processInput();
 
@@ -64,6 +64,7 @@ private:
 
 	std::vector<Human*> _humans;
 	std::vector<Zombie *> _zombies;
+	std::vector<Bullet> _bullets;
 	Bengine::SpriteBatch _agentSpriteBatch;
 };
 

@@ -8,6 +8,7 @@
 #include "Zombie.h"
 #include <random>
 #include <ctime>
+#include "Gun.h"
 
 const float HUMAN_SPEED = 1.0f;
 const float ZOMBIE_SPEED = 1.30f;
@@ -65,6 +66,8 @@ void MainGame::gameLoop() {
 		processInput();
 
 		updateAgents();
+		updateBullets();
+
 		_camera.setPosition(_player->getPosition());
 		_camera.update();
 		drawGame();
@@ -181,7 +184,7 @@ void MainGame::drawGame() {
 	//draw level
 	_levels[_currentLevel]->draw();
 	_agentSpriteBatch.begin();
-
+	
 	//draw player
 	for (int i = 0; i < _humans.size(); i++)
 	{
@@ -193,6 +196,10 @@ void MainGame::drawGame() {
 		_zombies[i]->draw(_agentSpriteBatch);
 	}
 
+	for (int i = 0; i < _bullets.size(); i++)
+	{
+		_bullets[i].draw(_agentSpriteBatch);
+	}
 	_agentSpriteBatch.end();
 	_agentSpriteBatch.renderBatch();
 	_textureProgram.unuse();
@@ -205,13 +212,13 @@ void MainGame::initLevel()
 	_currentLevel = 0;
 
 	_player = new Player();
-	_player->init(4.0f, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
+	_player->init(4.0f, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager, &_camera, &_bullets);
 
 
 	std::mt19937 randomEngine(time(nullptr));
 	
-	 std::uniform_int_distribution<int> randX(1, _levels[_currentLevel]->getWidth() - 2);
-	 std::uniform_int_distribution<int> randY(1, _levels[_currentLevel]->getHeight() -2 );
+	 std::uniform_int_distribution<int> randX(2, _levels[_currentLevel]->getWidth() - 2);
+	 std::uniform_int_distribution<int> randY(2, _levels[_currentLevel]->getHeight() -2 );
 
 	
 	std::cout << _levels[_currentLevel]->getNumHumans();
@@ -236,5 +243,60 @@ void MainGame::initLevel()
 		_zombies.back()->init(ZOMBIE_SPEED, zombiePositions[i]);
 	}
 
+	//set up guns
+	_player->addGun(new Gun("Magnum", 30, 1, 0, 30, 20));
+	_player->addGun(new Gun("ShotGun",60, 10, .5, 20, 20));
+	_player->addGun(new Gun("MP5", 5, 10,0.02, 20, 20));
+}
+void MainGame::updateBullets()
+{
+	for (int i = 0; i < _bullets.size();)
+	{
+		if (_bullets[i].update(_levels[_currentLevel]->getLevelData()))
+		{
+			_bullets[i] = _bullets.back();
+			_bullets.pop_back();
+		}
+		else
+		{
+			i++;
+		}
 
+	}
+
+	for (int i = 0; i < _bullets.size();i++)
+	{
+		for (int j = 0; j < _zombies.size();)
+		{
+			if (_bullets[i].collideWithAgent(_zombies[j]))
+			{
+				
+
+
+				if (_zombies[j]->applyDamage(_bullets[i].getDamage()))
+				{
+					delete _zombies[j];
+					_zombies[j] = _zombies.back();
+					_zombies.pop_back();
+
+				}
+				else{
+					j++;
+				}
+				_bullets[i] = _bullets.back();
+				_bullets.pop_back();
+				
+				break;
+			
+			}
+			else{
+				j++;
+			}
+
+
+
+		}
+
+
+	}
 }

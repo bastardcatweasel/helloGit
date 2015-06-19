@@ -133,3 +133,14 @@ bool Agent::collideWithAgent(Agent* agent)
 
 
 }
+
+bool Agent::applyDamage(float damage)
+{
+	_health -= damage;
+	if (_health <= 0)
+	{
+		return true;
+	}
+	return false;
+
+}

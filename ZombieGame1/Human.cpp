@@ -19,7 +19,7 @@ void Human::update(const std::vector<std::string> &levelData,
 
 	std::mt19937 randomEngine(time(nullptr));
 
-	std::uniform_real_distribution<float> randRotate(-0.1f, 0.1f);
+	std::uniform_real_distribution<float> randRotate(-0.0f, 0.50f);
 	_position += _direction * _speed;
 
 
@@ -47,13 +47,13 @@ void Human::init(float speed, glm::vec2 pos)
 
 	
 	
-	static std::uniform_real_distribution<float> randDir(-40.0f, 40.0f);
+	static std::uniform_real_distribution<float> randDir(0.0f, 0.5f);
 	
 	_color.r = 200;
 	_color.g = 0;
 	_color.b = 200;
 	_color.a = 255;
-
+	_health = 20;
 	_speed = speed;
 	_position = pos;
 	_direction = glm::vec2(randDir(randomEngine), randDir(randomEngine));

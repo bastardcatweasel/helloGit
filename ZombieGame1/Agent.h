@@ -21,11 +21,12 @@ public:
 	void draw(Bengine::SpriteBatch& spriteBatch);
 	bool collideWithLevel(const std::vector<std::string>& levelData);
 	bool collideWithAgent(Agent* agent);
-	
+	bool applyDamage(float damage);
 	glm::vec2 getPosition() const { return _position; }
 protected:
 	glm::vec2 _position;
 	float _speed;
+	float _health;
 	Bengine::Color _color;
 	void checkTilePosition(std::vector<glm::vec2>& collideTilePosition,
 		const std::vector<std::string>& levelData,

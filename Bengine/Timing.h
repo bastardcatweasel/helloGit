@@ -27,7 +27,7 @@ namespace Bengine{
 		float _maxFPS;
 		unsigned int _startTicks;
 		float _fps;
-		float _frameTime;
+		float _frameTime; 
 		void calculateFPS();
 	};
 

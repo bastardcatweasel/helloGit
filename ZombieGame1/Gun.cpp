@@ -1,6 +1,7 @@
 #include "Gun.h"
-
-
+#include <random>
+#include <ctime>
+#include <glm\gtx\rotate_vector.hpp>
 Gun::Gun(std::string name, int fireRate, int bulltsPerShot, float spread, float bulletSpeed, float bulletDamage) :
 _name(name), 
 _fireRate(fireRate), 
@@ -32,8 +33,17 @@ void Gun::update(bool isMouseDown, const glm::vec2& position, const glm::vec2& d
 
 void Gun::fire(glm::vec2 direction, const glm::vec2& position, std::vector<Bullet>& bullets)
 {
+
+	std::mt19937 randomEngine(time(nullptr));
+
+	std::uniform_real_distribution<float> randRotate(-_spread , _spread );
+
+
+
 	for (int i = 0; i < _bulletsPerShot; i++)
 	{
-		bullets.emplace_back(position, direction, _bulletDamage, _bulletSpeed);
+
+
+		bullets.emplace_back(position, glm::rotate(direction, randRotate(randomEngine)), _bulletDamage, _bulletSpeed);
 	}
 }
