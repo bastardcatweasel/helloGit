@@ -8,7 +8,7 @@ namespace Bengine {
 		Camera2D();
 		~Camera2D();
 
-
+		bool isBoxinView(const glm::vec2& position, const glm::vec2& dimensions);
 		void update();
 		void init(int screenWidth, int screenHeight);
 		//setters

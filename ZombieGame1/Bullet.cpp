@@ -20,9 +20,9 @@ Bullet::~Bullet()
 {
 }
 
-bool Bullet::update(const std::vector<std::string>& levelData)
+bool Bullet::update(const std::vector<std::string>& levelData, float deltaTime)
 {
-	_position += _direction * _speed;
+	_position += _direction * _speed * deltaTime;
 	return collideWithWorld(levelData);
 }
 void Bullet::draw(Bengine::SpriteBatch& spriteBatch)
@@ -32,7 +32,7 @@ void Bullet::draw(Bengine::SpriteBatch& spriteBatch)
 
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 
-	Bengine::Color color;
+	Bengine::ColorRGBA8 color;
 	color.r = 75;
 	color.g = 75;
 	color.b = 75;

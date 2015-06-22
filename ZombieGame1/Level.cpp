@@ -32,7 +32,7 @@ Level::Level(const std::string& fileName)
 
 
 	glm::vec4 uvRect(0, 0, 1, 1);
-	Bengine::Color whiteColor;
+	Bengine::ColorRGBA8 whiteColor;
 	whiteColor.r = 255;
 	whiteColor.g = 255;
 	whiteColor.b = 255;

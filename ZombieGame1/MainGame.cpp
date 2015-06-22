@@ -8,12 +8,13 @@
 #include "Zombie.h"
 #include <random>
 #include <ctime>
+#include <algorithm>
 #include "Gun.h"
 
 const float HUMAN_SPEED = 1.0f;
 const float ZOMBIE_SPEED = 1.30f;
 
-MainGame::MainGame() : _screenWidth(500), _screenHeight(500), _gameState(GameState::PLAY), _fps(0), _player(nullptr)
+MainGame::MainGame() : _screenWidth(500), _screenHeight(500), _gameState(GameState::PLAY), _fps(0), _player(nullptr), _numHumansKilled(0), _numZombiesKilled(0)
 {
     // Empty
 }
@@ -23,6 +24,17 @@ MainGame::~MainGame() {
 	{
 		_levels[i] = nullptr;
 		delete _levels[i];
+	}
+	for (int i = 0; i < _humans.size(); i++)
+	{
+		_humans[i] = nullptr;
+		delete _humans[i];
+	}
+
+	for (int i = 0; i < _zombies.size(); i++)
+	{
+		_zombies[i] = nullptr;
+		delete _zombies[i];
 	}
 }
 
@@ -56,17 +68,42 @@ void MainGame::initShaders() {
 }
 
 void MainGame::gameLoop() {
-	
+	const float DESIRED_FPS = 60.0f;
+	const int MAX_PHYSICS_STEPS = 6;
 	Bengine::FpsLimiter fpsLimiter;
-	fpsLimiter.setMaxFPS(60);
+	fpsLimiter.setMaxFPS(600000.0f);
 	
+	const float CAMERA_SCALE = 1.0f / 4.0f;
+	_camera.setScale(CAMERA_SCALE);
+
+	const float MS_PER_SECOND = 1000;
+	const float DESIRED_FRAMETIME= MS_PER_SECOND / DESIRED_FPS;
+	const float MAX_DELTA_TIME = 1.0f;
+	float previousTicks = SDL_GetTicks();
+
 	while (_gameState == GameState::PLAY)
 	{
+		
 		fpsLimiter.begin();
+		float newTicks = SDL_GetTicks();
+		float frameTime = newTicks - previousTicks;
+		previousTicks = newTicks;
+		float totalDeltaTime = frameTime / DESIRED_FRAMETIME;
+		checkVictory();
+
+		_inputManager.update();
 		processInput();
 
-		updateAgents();
-		updateBullets();
+		int i = 0;
+		while (totalDeltaTime > 0.0f && i < MAX_PHYSICS_STEPS)
+		{
+			float deltaTime = std::min(totalDeltaTime, MAX_DELTA_TIME);
+			updateAgents(deltaTime);
+			updateBullets(deltaTime);
+			totalDeltaTime -= deltaTime;
+			i++;
+		}
+
 
 		_camera.setPosition(_player->getPosition());
 		_camera.update();
@@ -74,20 +111,21 @@ void MainGame::gameLoop() {
 		
 		_fps = fpsLimiter.end();
 
+		std::cout << _fps << std::endl;
 	}
 }
 
-void MainGame::updateAgents()
+void MainGame::updateAgents(float deltaTime)
 {
 	for (int i = 0; i < _humans.size(); i++)
 	{
-		_humans[i]->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies);
+		_humans[i]->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies,deltaTime);
 	}
 
 
 	for (int i = 0; i < _zombies.size(); i++)
 	{
-		_zombies[i]->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies);
+		_zombies[i]->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies, deltaTime);
 	}
 
 	//Update Z collision
@@ -136,13 +174,24 @@ void MainGame::updateAgents()
 	
 
 }
+
+void MainGame::checkVictory()
+{
+	if (_zombies.empty())
+	{
+		std::printf("*****You win!!!!*****\n You Killed %d humans and %d zombies. There are %d/%d humans Remaining\n", _numHumansKilled,_numZombiesKilled, _humans.size()-1, _levels[_currentLevel]->getNumHumans());
+		Bengine::fatalError("");
+	}
+
+
+}
 void MainGame::processInput() {
     SDL_Event evnt;
     //Will keep looping until there are no more events to process
     while (SDL_PollEvent(&evnt)) {
         switch (evnt.type) {
             case SDL_QUIT:
-                // Exit the game here!
+				_gameState = GameState::EXIT;
                 break;
             case SDL_MOUSEMOTION:
                 _inputManager.setMouseCoords(evnt.motion.x, evnt.motion.y);
@@ -185,15 +234,25 @@ void MainGame::drawGame() {
 	_levels[_currentLevel]->draw();
 	_agentSpriteBatch.begin();
 	
+	
+	const glm::vec2 agentDims(AGENT_RADIUS * 2.0f);
 	//draw player
 	for (int i = 0; i < _humans.size(); i++)
 	{
-		_humans[i]->draw(_agentSpriteBatch);
+		if (_camera.isBoxinView(_humans[i]->getPosition(), agentDims))
+		{
+			_humans[i]->draw(_agentSpriteBatch);
+		}
+
 	}
 
 	for (int i = 0; i < _zombies.size(); i++)
 	{
-		_zombies[i]->draw(_agentSpriteBatch);
+
+		if (_camera.isBoxinView(_zombies[i]->getPosition(), agentDims))
+		{
+			_zombies[i]->draw(_agentSpriteBatch);
+		}
 	}
 
 	for (int i = 0; i < _bullets.size(); i++)
@@ -248,11 +307,11 @@ void MainGame::initLevel()
 	_player->addGun(new Gun("ShotGun",60, 10, .5, 20, 20));
 	_player->addGun(new Gun("MP5", 5, 10,0.02, 20, 20));
 }
-void MainGame::updateBullets()
+void MainGame::updateBullets(float deltaTime)
 {
 	for (int i = 0; i < _bullets.size();)
 	{
-		if (_bullets[i].update(_levels[_currentLevel]->getLevelData()))
+		if (_bullets[i].update(_levels[_currentLevel]->getLevelData(),deltaTime))
 		{
 			_bullets[i] = _bullets.back();
 			_bullets.pop_back();
@@ -264,8 +323,11 @@ void MainGame::updateBullets()
 
 	}
 
+	bool wasBulletRemoved;
+
 	for (int i = 0; i < _bullets.size();i++)
 	{
+		wasBulletRemoved = false;
 		for (int j = 0; j < _zombies.size();)
 		{
 			if (_bullets[i].collideWithAgent(_zombies[j]))
@@ -278,6 +340,7 @@ void MainGame::updateBullets()
 					delete _zombies[j];
 					_zombies[j] = _zombies.back();
 					_zombies.pop_back();
+					_numZombiesKilled++;
 
 				}
 				else{
@@ -285,7 +348,7 @@ void MainGame::updateBullets()
 				}
 				_bullets[i] = _bullets.back();
 				_bullets.pop_back();
-				
+				wasBulletRemoved = true;
 				break;
 			
 			}
@@ -296,7 +359,39 @@ void MainGame::updateBullets()
 
 
 		}
+		if (wasBulletRemoved == false)
+		{
+			for (int j = 1; j < _humans.size();)
+			{
+				if (_bullets[i].collideWithAgent(_humans[j]))
+				{
 
 
+
+					if (_humans[j]->applyDamage(_bullets[i].getDamage()))
+					{
+						delete _humans[j];
+						_humans[j] = _humans.back();
+						_humans.pop_back();
+						_numHumansKilled++;
+
+					}
+					else{
+						j++;
+					}
+					_bullets[i] = _bullets.back();
+					_bullets.pop_back();
+					wasBulletRemoved = true;
+					break;
+
+				}
+				else{
+					j++;
+				}
+
+
+
+			}
+		}
 	}
 }

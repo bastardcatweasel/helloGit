@@ -17,7 +17,7 @@ public:
 
 	virtual void update(const std::vector<std::string> &levelData,
 		std::vector<Human*> &humans,
-		std::vector<Zombie*> & zombies) = 0;
+		std::vector<Zombie*> & zombies, float deltaTime) = 0;
 	void draw(Bengine::SpriteBatch& spriteBatch);
 	bool collideWithLevel(const std::vector<std::string>& levelData);
 	bool collideWithAgent(Agent* agent);
@@ -27,7 +27,7 @@ protected:
 	glm::vec2 _position;
 	float _speed;
 	float _health;
-	Bengine::Color _color;
+	Bengine::ColorRGBA8 _color;
 	void checkTilePosition(std::vector<glm::vec2>& collideTilePosition,
 		const std::vector<std::string>& levelData,
 		float x, float y);

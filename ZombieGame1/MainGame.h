@@ -34,9 +34,11 @@ private:
     /// Main game loop for the program
     void gameLoop();
 
-	void updateAgents();
-	void updateBullets();
-    /// Handles input processing
+	void updateAgents(float deltaTime);
+	void updateBullets(float deltaTime);
+   
+	void checkVictory();
+	/// Handles input processing
     void processInput();
 
     /// Renders the game
@@ -57,11 +59,12 @@ private:
 	int _screenWidth;
 	int _screenHeight;
 	GameState _gameState;
-	int _fps;
+	float _fps;
 	int _currentLevel;
 
 	Player* _player;
-
+	int _numZombiesKilled;
+	int _numHumansKilled;
 	std::vector<Human*> _humans;
 	std::vector<Zombie *> _zombies;
 	std::vector<Bullet> _bullets;

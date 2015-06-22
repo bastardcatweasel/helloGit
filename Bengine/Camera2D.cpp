@@ -43,4 +43,28 @@ namespace Bengine {
 
 		return screenCoords;
 	}
+
+	bool Camera2D::isBoxinView(const glm::vec2& position, const glm::vec2& dimensions)
+	{
+		glm::vec2 scaledScreenDimensions = glm::vec2(_screenWidth / _screenHeight) / (_scale);
+		const float MIN_DISTANCE_X = dimensions.x / 2.0f + _screenWidth * scaledScreenDimensions.x / 2;
+		const float MIN_DISTANCE_Y = dimensions.y / 2.0f + _screenHeight * scaledScreenDimensions.y / 2;
+
+		glm::vec2 centerPos = position + dimensions / 2.0f;
+		glm::vec2 centerCameraPos = _position;
+		glm::vec2 distVec = centerPos - centerCameraPos;
+		
+		float xdepth = MIN_DISTANCE_X - abs(distVec.x);
+		float ydepth = MIN_DISTANCE_Y - abs(distVec.y);
+
+
+
+		if (xdepth > 0 && ydepth > 0)
+		{
+			//there was a collision 
+			return true;
+		}
+		return false;
+
+	}
 }
