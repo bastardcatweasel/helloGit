@@ -2,14 +2,15 @@
 #include <random>
 #include <ctime>
 #include <glm\gtx\rotate_vector.hpp>
-Gun::Gun(std::string name, int fireRate, int bulltsPerShot, float spread, float bulletSpeed, float bulletDamage) :
+Gun::Gun(std::string name, int fireRate, int bulltsPerShot, float spread, float bulletSpeed, float bulletDamage, Bengine::SoundEffect fireEffect) :
 _name(name), 
 _fireRate(fireRate), 
 _bulletsPerShot(bulltsPerShot), 
 _spread(spread), 
 _bulletSpeed(bulletSpeed), 
 _bulletDamage(bulletDamage),
-_frameCounter(0)
+_frameCounter(0),
+m_fireEffect(fireEffect)
 {
 
 
@@ -39,7 +40,7 @@ void Gun::fire(glm::vec2 direction, const glm::vec2& position, std::vector<Bulle
 	std::uniform_real_distribution<float> randRotate(-_spread , _spread );
 
 
-
+	m_fireEffect.play();
 	for (int i = 0; i < _bulletsPerShot; i++)
 	{
 

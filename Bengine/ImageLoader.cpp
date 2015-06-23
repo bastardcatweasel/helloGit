@@ -1,7 +1,7 @@
 #include "ImageLoader.h"
 #include "picoPNG.h"
 #include "IOManager.h"
-#include "Errors.h"
+#include "BengineErrors.h"
 namespace Bengine{
 	GLTexture ImageLoader::loadPNG(std::string filePath) {
 		//Create a GLTexture and initialize all its fields to 0

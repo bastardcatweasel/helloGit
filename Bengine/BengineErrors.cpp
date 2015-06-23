@@ -1,5 +1,5 @@
 
-#include "Errors.h"
+#include "BengineErrors.h"
 #include <iostream>
 
 #include <SDL/SDL.h>
