@@ -3,6 +3,7 @@
 #include <math.h>
 #include "Bullet.h"
 #include "Gun.h"
+#include <Bengine\ResourceManager.h>
 Player::Player() : _currentGunIndex(-1)
 {
 }
@@ -18,10 +19,11 @@ void Player::init(float speed, glm::vec2 position, Bengine::InputManager* inputM
 	_inputManager = inputManager;
 	_camera = camera;
 	_bullets = bullets;
-	_color.r = 0;
-	_color.g = 0;
-	_color.b = 220;
+	_color.r = 255;
+	_color.g = 255;
+	_color.b = 255;
 	_color.a = 255;
+	m_textureID = Bengine::ResourceManager::getTexture("Textures/player.png").id;
 }
 void Player::update(const std::vector<std::string> &levelData,
 	std::vector<Human*>&  humans,

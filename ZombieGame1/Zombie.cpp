@@ -1,6 +1,6 @@
 #include "Zombie.h"
 #include "Human.h"
-
+#include <Bengine\ResourceManager.h>
 Zombie::Zombie()
 {
 }
@@ -32,9 +32,10 @@ void Zombie::init(float speed, glm::vec2 pos)
 {
 	_speed = speed;
 	_position = pos;
-	_color = Bengine::ColorRGBA8(0, 160, 0, 255);
+	_color = Bengine::ColorRGBA8(255, 255, 255, 255);
 	
 	_health = 150;
+	m_textureID = Bengine::ResourceManager::getTexture("Textures/zombie.png").id;
 }
 Human*  Zombie::getNearestHuman(std::vector<Human*> humans)
 {

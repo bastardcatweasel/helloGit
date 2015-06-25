@@ -4,13 +4,7 @@
 
 namespace Bengine{
 
-
-	void Particle2D::update(float deltaTime)
-	{
-		m_position += m_velocity * deltaTime;
-	}
-
-
+	
 
 
 	ParticleBatch2D::ParticleBatch2D()
@@ -24,12 +18,13 @@ namespace Bengine{
 		delete[] m_particles;
 	}
 
-	void ParticleBatch2D::init(int maxParticles, float decayRate, GLTexture texture)
+	void ParticleBatch2D::init(int maxParticles, float decayRate, GLTexture texture, std::function<void(Particle2D&, float)> updateFunc)
 	{
 		m_maxParticles = maxParticles;
 		m_decayRate = decayRate;
 		m_particles = new Particle2D[maxParticles];
 		m_texture = texture;
+		m_updateFunc = updateFunc;
 	}
 
 
@@ -37,10 +32,11 @@ namespace Bengine{
 	{
 		for (int i = 0; i < m_maxParticles; i++)
 		{
-			if (m_particles[i].m_life > 0.0f)
+			if (m_particles[i].life > 0.0f)
 			{
-				m_particles[i].update(deltaTime);
-				m_particles[i].m_life -= m_decayRate * deltaTime;
+				m_updateFunc(m_particles[i], deltaTime);
+				
+				m_particles[i].life -= m_decayRate * deltaTime;
 			}
 		}
 	}
@@ -51,10 +47,10 @@ namespace Bengine{
 		for (int i = 0; i < m_maxParticles; i++)
 		{
 			auto& p = m_particles[i];
-			if (p.m_life > 0.0f)
+			if (p.life > 0.0f)
 			{
-				glm::vec4 destRect(p.m_position.x, p.m_position.y, p.m_width, p.m_width);
-				spriteBatch->draw(destRect,uvRect, m_texture.id, 0.0f, p.m_color);
+				glm::vec4 destRect(p.position.x, p.position.y, p.width, p.width);
+				spriteBatch->draw(destRect,uvRect, m_texture.id, 0.0f, p.color);
 			}
 		}
 	}
@@ -67,11 +63,11 @@ namespace Bengine{
 		int particleIndex = findFreeParticle();
 		auto& p = m_particles[particleIndex];
 
-		p.m_life = 1.0f;
-		p.m_position = position;
-		p.m_velocity = velocity;
-		p.m_color = color;
-		p.m_width = width;
+		p.life = 1.0f;
+		p.position = position;
+		p.velocity = velocity;
+		p.color = color;
+		p.width = width;
 
 
 	}
@@ -80,7 +76,7 @@ namespace Bengine{
 	{
 		for (int i = m_lastFreeParticle; i < m_maxParticles; i++)
 		{
-			if (m_particles[i].m_life <= 0.0f)
+			if (m_particles[i].life <= 0.0f)
 			{
 				m_lastFreeParticle = i;
 
@@ -90,7 +86,7 @@ namespace Bengine{
 
 		for (int i = 0; i < m_lastFreeParticle; i++)
 		{
-			if (m_particles[i].m_life <= 0.0f)
+			if (m_particles[i].life <= 0.0f)
 			{
 				m_lastFreeParticle = i;
 

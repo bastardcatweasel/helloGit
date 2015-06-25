@@ -39,7 +39,7 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData)
 }
 void Agent::draw(Bengine::SpriteBatch& spriteBatch)
 {
-	static int textureID = Bengine::ResourceManager::getTexture("Textures/circle.png").id;
+	
 	const glm::vec4 uvRect(0, 0, 1, 1);
 	glm::vec4 destRect;
 	destRect.x = _position.x;
@@ -50,7 +50,7 @@ void Agent::draw(Bengine::SpriteBatch& spriteBatch)
 	
 
 
-	spriteBatch.draw(destRect, uvRect, textureID, 0.0f, _color);
+	spriteBatch.draw(destRect, uvRect, m_textureID, 0.0f, _color);
 }
 void Agent::checkTilePosition(std::vector<glm::vec2>& collideTilePosition,
 								const std::vector<std::string>& levelData,

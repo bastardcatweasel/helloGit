@@ -49,6 +49,12 @@ void MainGame::run() {
 	gameLoop();
 }
 
+void updateBloodParticle(Bengine::Particle2D& particle, float deltaTime)
+{
+	particle.position += particle.velocity * deltaTime;
+	particle.color.a = (GLubyte)(particle.life * 255.0f);
+}
+
 void MainGame::initSystems() {
 	// IMPLEMENT THIS!
 	Bengine::init();
@@ -65,7 +71,10 @@ void MainGame::initSystems() {
 	_hudCamera.setPosition(glm::vec2(_screenWidth / 2, _screenHeight / 2));
 	//init Particles
 	m_bloodParticleBatch = new Bengine::ParticleBatch2D;
-	m_bloodParticleBatch->init(1000, 0.05f, Bengine::ResourceManager::getTexture("Textures/particle.png"));
+	m_bloodParticleBatch->init(1000, 0.05f, Bengine::ResourceManager::getTexture("Textures/particle.png"), [](Bengine::Particle2D& particle, float deltaTime) {
+		particle.position += particle.velocity * deltaTime;
+		particle.color.a = (GLubyte)(particle.life * 255.0f);
+	});
 	m_particleEngine.addParticleBatch(m_bloodParticleBatch);
 	initLevel();
 	
@@ -88,7 +97,7 @@ void MainGame::gameLoop() {
 	Bengine::FpsLimiter fpsLimiter;
 	fpsLimiter.setMaxFPS(600000.0f);
 	
-	const float CAMERA_SCALE = 1.0f / 4.0f;
+	const float CAMERA_SCALE = 1.0f / 3.0f;
 	_camera.setScale(CAMERA_SCALE);
 
 	const float MS_PER_SECOND = 1000;
@@ -384,7 +393,7 @@ void MainGame::updateBullets(float deltaTime)
 		{
 			if (_bullets[i].collideWithAgent(_zombies[j]))
 			{
-				addBlood(_bullets[i].getPosition(), 10);
+				addBlood(_bullets[i].getPosition(), 5);
 
 
 				if (_zombies[j]->applyDamage(_bullets[i].getDamage()))
@@ -418,7 +427,7 @@ void MainGame::updateBullets(float deltaTime)
 				if (_bullets[i].collideWithAgent(_humans[j]))
 				{
 
-					addBlood(_bullets[i].getPosition(), 10);
+					addBlood(_bullets[i].getPosition(), 5);
 
 					if (_humans[j]->applyDamage(_bullets[i].getDamage()))
 					{

@@ -34,7 +34,7 @@ protected:
 
 	void collideWithTile(glm::vec2 tilePos);
 
-
+	GLuint m_textureID;
 	
 };
 
