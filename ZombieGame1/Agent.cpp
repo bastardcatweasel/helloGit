@@ -29,7 +29,7 @@ bool Agent::collideWithLevel(const std::vector<std::string>& levelData)
 	{
 		return false;
 	}
-	for (int i = 0; i < collideTilePosition.size(); i++)
+	for (auto i = 0; i < collideTilePosition.size(); i++)
 	{
 		collideWithTile(collideTilePosition[i]);
 	}
@@ -50,7 +50,7 @@ void Agent::draw(Bengine::SpriteBatch& spriteBatch)
 	
 
 
-	spriteBatch.draw(destRect, uvRect, m_textureID, 0.0f, _color);
+	spriteBatch.draw(destRect, uvRect, m_textureID, 0.0f, _color, m_direction);
 }
 void Agent::checkTilePosition(std::vector<glm::vec2>& collideTilePosition,
 								const std::vector<std::string>& levelData,

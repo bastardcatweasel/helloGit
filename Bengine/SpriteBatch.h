@@ -35,6 +35,8 @@ namespace Bengine{
 		Vertex bottomLeft;
 		Vertex topRight;
 		Vertex bottomRight;
+	private:
+		glm::vec2 rotatePoint(glm::vec2 pos, float angle);
 
 	};
 	class RenderBatch{
@@ -67,7 +69,7 @@ namespace Bengine{
 
 		void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color,float angle);
 
-		void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color, const glm::vec2 dir);
+		void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color, const glm::vec2& dir);
 
 
 		void renderBatch();

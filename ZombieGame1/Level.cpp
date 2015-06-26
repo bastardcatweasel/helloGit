@@ -38,9 +38,9 @@ Level::Level(const std::string& fileName)
 	whiteColor.b = 255;
 	whiteColor.a = 255;
 
-	for (int y = 0; y < _levelData.size(); y++)
+	for (auto y = 0; y < _levelData.size(); y++)
 	{
-		for (int x = 0; x < _levelData[y].size(); x++)
+		for (auto x = 0; x < _levelData[y].size(); x++)
 		{
 			
 			//get Tile

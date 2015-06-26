@@ -35,6 +35,7 @@ protected:
 	void collideWithTile(glm::vec2 tilePos);
 
 	GLuint m_textureID;
+	glm::vec2 m_direction = glm::vec2(1.0, 0.0);
 	
 };
 

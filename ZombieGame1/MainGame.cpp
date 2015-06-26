@@ -23,18 +23,18 @@ MainGame::MainGame() : _screenWidth(500), _screenHeight(500), _gameState(GameSta
 }
 
 MainGame::~MainGame() {
-	for (int i = 0; i < _levels.size(); i++)
+	for (auto i = 0; i < _levels.size(); i++)
 	{
 		_levels[i] = nullptr;
 		delete _levels[i];
 	}
-	for (int i = 0; i < _humans.size(); i++)
+	for (auto i = 0; i < _humans.size(); i++)
 	{
 		_humans[i] = nullptr;
 		delete _humans[i];
 	}
 
-	for (int i = 0; i < _zombies.size(); i++)
+	for (auto i = 0; i < _zombies.size(); i++)
 	{
 		_zombies[i] = nullptr;
 		delete _zombies[i];

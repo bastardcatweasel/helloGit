@@ -22,12 +22,12 @@ void Human::update(const std::vector<std::string> &levelData,
 	std::mt19937 randomEngine(time(nullptr));
 
 	std::uniform_real_distribution<float> randRotate(-0.0f, 0.50f);
-	_position += _direction * _speed * deltaTime;
+	_position += m_direction * _speed * deltaTime;
 
 
 	if (_frames == 20)
 	{
-		_direction = glm::rotate(_direction, randRotate(randomEngine));
+		m_direction = glm::rotate(m_direction, randRotate(randomEngine));
 		_frames = 0;
 	}
 	else
@@ -37,7 +37,7 @@ void Human::update(const std::vector<std::string> &levelData,
 
 	if (collideWithLevel(levelData))
 	{
-		_direction = glm::rotate(_direction, randRotate(randomEngine));
+		m_direction = glm::rotate(m_direction, randRotate(randomEngine));
 	}
 
 	
@@ -58,11 +58,11 @@ void Human::init(float speed, glm::vec2 pos)
 	_health = 20;
 	_speed = speed;
 	_position = pos;
-	_direction = glm::vec2(randDir(randomEngine), randDir(randomEngine));
+	m_direction = glm::vec2(randDir(randomEngine), randDir(randomEngine));
 	m_textureID = Bengine::ResourceManager::getTexture("Textures/human.png").id;
 
-	if (_direction.length() == 0) _direction = glm::vec2(1.0f, 0.0f);
+	if (m_direction.length() == 0)m_direction = glm::vec2(1.0f, 0.0f);
 	
-	_direction = glm::normalize(_direction);
+	m_direction = glm::normalize(m_direction);
 
 }

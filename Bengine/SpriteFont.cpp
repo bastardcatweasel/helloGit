@@ -95,7 +95,7 @@ namespace Bengine {
         int ly = padding;
         for (int ri = 0; ri < bestRows; ri++) {
             int lx = padding;
-            for (int ci = 0; ci < bestPartition[ri].size(); ci++) {
+            for (auto ci = 0; ci < bestPartition[ri].size(); ci++) {
                 int gi = bestPartition[ri][ci];
 
                 SDL_Surface* glyphSurface = TTF_RenderGlyph_Blended(f, (char)(cs + gi), fg);
