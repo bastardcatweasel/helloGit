@@ -79,7 +79,7 @@ namespace Bengine{
 	{
 		if (m_isInitialized)
 		{
-			m_isInitialized == false;
+			m_isInitialized = false;
 			for (auto& it : m_effectMap)
 			{
 				Mix_FreeChunk(it.second);

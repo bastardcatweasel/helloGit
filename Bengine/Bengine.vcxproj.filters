@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="GLSLProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,6 +67,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ParticleBatch2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IMainGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -132,6 +135,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ParticleBatch2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IMainGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
